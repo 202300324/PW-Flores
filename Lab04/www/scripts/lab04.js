@@ -39,9 +39,16 @@ let ProductType = {
  * @property {string} description - descrição do produto
  * @property {string} productType - tipo do produto, baseado nos valores de ProductType.
  * @property {number} price - preço do produto.
+ * @property {function} toTrTd - método que devolve a representação da informação de um produto sob a forma do código HTML para construir uma linha de tabela.
+ * @property {object} propertyLabels - Equivalência entre o nome das propriedades e o descritivo em português (será acedida como "propriedade de classe").
+ * @property {string} thead - String com código HTML para construir uma linha de cabeçalho de tabela com a informação dos produtos (será acedida como "propriedade de classe").
+ * @property {string} E - Tipo de produto ser uma Entrada (será acedida como "propriedade de classe").
+ * @property {string} B - Tipo de produto ser uma Bebida (será acedida como "propriedade de classe").
+ * @property {string} P - Tipo de produto ser um Prato Principal (será acedida como "propriedade de classe").
+ * @property {string} S - Tipo de produto ser uma Sobremesa (será acedida como "propriedade de classe").
  */
 function Product(description = "", productType = "", price = 0.0) {
-    //TODO: @todo - completar
+    
 }
 
 /** Métodos de Instância */
@@ -51,7 +58,10 @@ function Product(description = "", productType = "", price = 0.0) {
  * @returns {string} representação da informação de um produto sob a forma do código HTML para construir uma linha de tabela.
  */
 Product.prototype.toTrTd = function () {
-    //TODO: @todo - completar
+    return `<tr><td>${this.description}</td>
+            <td>${ProductType[this.productType]}</td>
+            <td>${this.price.toFixed(2)}</td></tr>`;
+
 };
 
 /** Propriedades e Métodos de Classe */
@@ -72,7 +82,7 @@ Product.propertyLabels = {
  * @property {string} thead - String com código HTML para construir uma linha de cabeçalho de tabela com a informação dos produtos (será acedida como "propriedade de classe").
  * @readonly
  */
-Product.thead = null; //TODO: @todo - completar
+Product.thead = `<tr><th>${Product.propertyLabels.description}</th><th>${Product.propertyLabels.productType}</th><th>${Product.propertyLabels.price} (€)</th></tr>`;
 
 /**
  * Classe Menu
@@ -120,7 +130,14 @@ Menu.prototype.show = function () {
  * @returns {Menu} o próprio objeto Menu: permite a realização de "Method Chaining".
  */
 Menu.prototype.add = function (product) {
-    //TODO: @todo - completar
+    if (!product) return this; // ignorar chamadas sem produto válido
+    // procurar produto com mesma descrição e tipo
+    let existe = this.products.find(p => p.description === product.description && p.productType === product.productType);
+    if (existe) // se existir, muda o preço
+        existe.price = product.price;
+    else
+        this.products.push(product);
+    return this.products;    
 };
 
 /**
